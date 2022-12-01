@@ -39,47 +39,57 @@ import static org.mockito.Mockito.*;
 
 /**
  * SlotVendingMachine类的公有方法测试类
+ *
  * @author dailj
  * @date 2022/11/30 22:37
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({SlotVendingMachine.class})
 public class SlotVendingMachineTest {
+    
     @Mock
     Logger LOGGER;
+    
     //Field state of type SlotVendingMachineState - was not mocked since Mockito doesn't mock enums
     @Mock
     Order curOrder;
+    
     @Mock
     DomainEventBus eventBus;
+    
     @Mock
     TradeDeviceService deviceService;
+    
     @Mock
     TradeCommodityService commodityService;
+    
     @Mock
     TradePayService payService;
+    
     @Mock
     VendingMachineRepository vendingMachineRepository;
+    
     @InjectMocks
     SlotVendingMachine slotVendingMachine;
+    
     private SlotVendingMachine vendingMachine;
+    
     /*@Spy
-    SlotVendingMachine vendingMachine;*/
-    TradeVendingMachineRepositoryImpl.TradeVendingMachineRepositoryAspect tradeVendingMachineRepositoryAspect;
-
+    SlotVendingMachine vendingMachine;*/ TradeVendingMachineRepositoryImpl.TradeVendingMachineRepositoryAspect tradeVendingMachineRepositoryAspect;
+    
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         // MockitoAnnotations.openMocks(this);
         Whitebox.setInternalState(slotVendingMachine, "curOrder", curOrder);
         Whitebox.setInternalState(slotVendingMachine, "eventBus", eventBus);
-        FieldHelper.setStaticFinalField(TradeVendingMachineRepositoryImpl.TradeVendingMachineRepositoryAspect.class, 
-            "repository", vendingMachineRepository);
+        FieldHelper.setStaticFinalField(TradeVendingMachineRepositoryImpl.TradeVendingMachineRepositoryAspect.class,
+                "repository", vendingMachineRepository);
     }
-
+    
     @Test
     public void testFinishOrder() throws Exception {
-        when(curOrder.getCommodities()).thenReturn(Arrays.<StockedCommodity>asList(new StockedCommodity(
-                "commodityId", null, null, null, 0)));
+        when(curOrder.getCommodities())
+                .thenReturn(Arrays.<StockedCommodity>asList(new StockedCommodity("commodityId", null, null, null, 0)));
         when(curOrder.getOrderId()).thenReturn(0L);
         when(curOrder.getMachineId()).thenReturn(0L);
         doNothing().when(curOrder).succeed();
@@ -88,10 +98,10 @@ public class SlotVendingMachineTest {
         when(deviceService.getInventory(anyLong())).thenReturn(inventoryInfoList);
         doNothing().when(deviceService).popCommodity(anyLong(), anyString(), anyLong());
         doNothing().when(vendingMachineRepository).updateSlotVendingMachine(any());
-
+        
         slotVendingMachine.finishOrder(0L, deviceService);
     }
-
+    
     @Test
     public void testGetCommodityList() throws Exception {
         ArrayList<InventoryInfo> inventoryInfoList = new ArrayList();
@@ -102,15 +112,15 @@ public class SlotVendingMachineTest {
         VendingMachineCommodityList result = slotVendingMachine.getCommodityList(deviceService, commodityService);
         Assert.assertTrue(Integer.valueOf(result.commodities().size()).equals(0));
     }
-
+    
     @Test(expected = DomainException.class)
-    public void testSelectCommodityNotReady() {        
+    public void testSelectCommodityNotReady() {
         Whitebox.setInternalState(slotVendingMachine, "state", SlotVendingMachineState.Popping);
         doReturn(new PaymentQrCode(1L, "url")).when(payService).startQrCodePayForOrder(any(), any());
-
-       slotVendingMachine.selectCommodity(Arrays.asList(
-                new StockedCommodity("commodityId", null, null, null, 0)), 
-                deviceService, payService, PlatformType.Wechat);
+        
+        slotVendingMachine
+                .selectCommodity(Arrays.asList(new StockedCommodity("commodityId", null, null, null, 0)), deviceService,
+                        payService, PlatformType.Wechat);
     }
     
     @Test
@@ -118,20 +128,21 @@ public class SlotVendingMachineTest {
         when(curOrder.getState()).thenReturn(OrderState.Canceled);
         slotVendingMachine.cancelOrder();
     }
+    
     @Test
     public void testCancelOrderRight() {
         doNothing().when(eventBus).post(any());
         slotVendingMachine.cancelOrder();
     }
     
-
+    
     @Test
     public void testOnPopSuccess() throws Exception {
         when(curOrder.getOrderId()).thenReturn(0L);
         Whitebox.setInternalState(slotVendingMachine, "state", SlotVendingMachineState.Popping);
         slotVendingMachine.onPopSuccess(new PopSuccessEvent());
     }
-
+    
     @Test
     public void testReady() throws Exception {
         Whitebox.setInternalState(slotVendingMachine, "state", SlotVendingMachineState.Ready);
@@ -143,7 +154,7 @@ public class SlotVendingMachineTest {
         Whitebox.setInternalState(slotVendingMachine, "state", SlotVendingMachineState.Popping);
         slotVendingMachine.ready();
     }
-
+    
     @Test
     public void testBuilder() throws Exception {
         SlotVendingMachine.Builder result = SlotVendingMachine.Builder();

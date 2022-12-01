@@ -39,25 +39,31 @@ import static org.mockito.Mockito.*;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({SlotVendingMachine.class})
 public class SlotVendingMachinePrivateTest {
+    
     @Mock
     Order curOrder;
+    
     @Mock
     DomainEventBus eventBus;
+    
     @Mock
     TradeDeviceService deviceService;
+    
     @Mock
     TradePayService payService;
+    
     @Mock
     VendingMachineRepository vendingMachineRepository;
+    
     private SlotVendingMachine vendingMachine;
-
+    
     @Before
     public void setUp() throws NoSuchFieldException, IllegalAccessException {
         FieldHelper.setStaticFinalField(TradeVendingMachineRepositoryImpl.TradeVendingMachineRepositoryAspect.class,
                 "repository", vendingMachineRepository);
         doNothing().when(vendingMachineRepository).updateSlotVendingMachine(any());
     }
-
+    
     @Test(expected = DomainException.class)
     public void testSelectCommodityNoInventory() throws Exception {
         /// 每个函数内进行独立性初始化
@@ -70,19 +76,19 @@ public class SlotVendingMachinePrivateTest {
          *      "repository", vendingMachineRepository);
          * doNothing().when(vendingMachineRepository).updateSlotVendingMachine(any());
          */
-
+        
         vendingMachine = PowerMockito.spy(SlotVendingMachine.Builder().eventBus(eventBus).build());
         Whitebox.setInternalState(vendingMachine, "state", SlotVendingMachineState.Ready);
         // Whitebox.setInternalState(vendingMachine, "eventBus", eventBus);
-
-        PowerMockito.doReturn(false).when(vendingMachine, "checkInventory",
-                Mockito.<java.util.Collection<StockedCommodity>>any(), Mockito.<TradeDeviceService>any());
-
-        vendingMachine.selectCommodity(Arrays.asList(
-                new StockedCommodity("1", null, null, null, 0)),
-                deviceService, payService, PlatformType.Wechat);
+        
+        PowerMockito.doReturn(false)
+                .when(vendingMachine, "checkInventory", Mockito.<java.util.Collection<StockedCommodity>>any(),
+                        Mockito.<TradeDeviceService>any());
+        
+        vendingMachine.selectCommodity(Arrays.asList(new StockedCommodity("1", null, null, null, 0)), deviceService,
+                payService, PlatformType.Wechat);
     }
-
+    
     @Test
     public void testSelectCommodity() throws Exception {
         /// 每个函数内进行独立性初始化
@@ -97,21 +103,22 @@ public class SlotVendingMachinePrivateTest {
          * doNothing().when(vendingMachineRepository).updateSlotVendingMachine(any());
          */
         doReturn(new PaymentQrCode(1L, "url")).when(payService).startQrCodePayForOrder(any(), any());
-
+        
         vendingMachine = PowerMockito.spy(SlotVendingMachine.Builder().eventBus(eventBus).build());
         Whitebox.setInternalState(vendingMachine, "state", SlotVendingMachineState.Ready);
-
-        PowerMockito.doReturn(true).when(vendingMachine, "checkInventory",
-                Mockito.<java.util.Collection<StockedCommodity>>any(), Mockito.<TradeDeviceService>any());
+        
+        PowerMockito.doReturn(true)
+                .when(vendingMachine, "checkInventory", Mockito.<java.util.Collection<StockedCommodity>>any(),
+                        Mockito.<TradeDeviceService>any());
         PowerMockito.doReturn(curOrder).when(vendingMachine, "generateOrder", any());
         PowerMockito.doNothing().when(vendingMachine, "emitEvent", any());
-
-        PaymentQrCode paymentQrCode = vendingMachine.selectCommodity(Arrays.asList(
-                new StockedCommodity("1", null, null, null, 0)),
-                deviceService, payService, PlatformType.Wechat);
+        
+        PaymentQrCode paymentQrCode = vendingMachine
+                .selectCommodity(Arrays.asList(new StockedCommodity("1", null, null, null, 0)), deviceService,
+                        payService, PlatformType.Wechat);
         Assert.assertTrue(paymentQrCode.getCodeUrl().length() > 0);
     }
-
+    
     @Test
     public void testGenerateOrder() throws Exception {
         UniqueIdGeneratorUtil uniqueIdGeneratorUtil = Mockito.mock(UniqueIdGeneratorUtil.class);
@@ -119,24 +126,23 @@ public class SlotVendingMachinePrivateTest {
         PowerMockito.doReturn(1L).when(uniqueIdGeneratorUtil, "nextId");
         vendingMachine = PowerMockito.spy(SlotVendingMachine.Builder().eventBus(eventBus).build());
         Whitebox.setInternalState(vendingMachine, "machineId", 1L);
-
-        Order order = Whitebox.invokeMethod(vendingMachine, "generateOrder", Arrays.asList(new StockedCommodity(
-                "commodityId", null, null, null, 1)));
+        
+        Order order = Whitebox.invokeMethod(vendingMachine, "generateOrder",
+                Arrays.asList(new StockedCommodity("commodityId", null, null, null, 1)));
         Assert.assertTrue(order.getCommodities().size() > 0);
         Mockito.verify(uniqueIdGeneratorUtil).nextId();
     }
-
+    
     @Test
     public void testCheckInventoryRight() throws Exception {
         ArrayList<InventoryInfo> inventoryInfoList = new ArrayList();
-        InventoryInfo inventoryInfo = new InventoryInfo("1",1);
+        InventoryInfo inventoryInfo = new InventoryInfo("1", 1);
         inventoryInfoList.add(inventoryInfo);
         doReturn(inventoryInfoList).when(deviceService).getInventory(anyLong());
         vendingMachine = PowerMockito.spy(SlotVendingMachine.Builder().eventBus(eventBus).build());
-
-        boolean result =  Whitebox.invokeMethod(vendingMachine, "checkInventory", 
-                Arrays.asList(new StockedCommodity("1", null, null, 
-                null, 1)), deviceService);
+        
+        boolean result = Whitebox.invokeMethod(vendingMachine, "checkInventory",
+                Arrays.asList(new StockedCommodity("1", null, null, null, 1)), deviceService);
         Assert.assertTrue(result);
         Mockito.verify(deviceService).getInventory(anyLong());
     }
@@ -144,18 +150,17 @@ public class SlotVendingMachinePrivateTest {
     @Test
     public void testCheckInventoryWrong() throws Exception {
         ArrayList<InventoryInfo> inventoryInfoList = new ArrayList();
-        InventoryInfo inventoryInfo = new InventoryInfo("commodityId",1);
+        InventoryInfo inventoryInfo = new InventoryInfo("commodityId", 1);
         inventoryInfoList.add(inventoryInfo);
         doReturn(inventoryInfoList).when(deviceService).getInventory(anyLong());
         vendingMachine = PowerMockito.spy(SlotVendingMachine.Builder().eventBus(eventBus).build());
-
-        boolean result =  Whitebox.invokeMethod(vendingMachine, "checkInventory", 
-                Arrays.asList(new StockedCommodity("1", null, null, 
-                null, 1)), deviceService);
+        
+        boolean result = Whitebox.invokeMethod(vendingMachine, "checkInventory",
+                Arrays.asList(new StockedCommodity("1", null, null, null, 1)), deviceService);
         Assert.assertFalse(result);
         Mockito.verify(deviceService).getInventory(anyLong());
     }
-
+    
 }
 
 
