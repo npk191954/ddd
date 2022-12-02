@@ -20,15 +20,17 @@ public class RocketmqDomainEventListener extends DomainEventListener {
 //    @Value("${rocketmq.nameServer}")
 //    private String nameServer;
 
-    private static final String groupId = "consumer-group";
+    // private static final String groupId = "consumer-group";
 
     public RocketmqDomainEventListener() {
+        super();
     }
 
     public RocketmqDomainEventListener(Class eventType, DomainEventHandler handler, String server) {
-        this.eventType = eventType;
+        /*this.eventType = eventType;
         this.handler = handler;
-        this.server = server;
+        this.server = server;*/
+        super(eventType, handler, server);
         consumer = new DefaultMQPushConsumer(groupId);
         consumer.setNamesrvAddr(this.server);
     }

@@ -21,13 +21,14 @@ public class KafkaDomainEventListener extends DomainEventListener {
     private Properties props;
 
     public KafkaDomainEventListener() {
-
+        super();
     }
 
     public KafkaDomainEventListener(Class eventType, DomainEventHandler handler, String server) {
-        this.eventType = eventType;
+        /*this.eventType = eventType;
         this.handler = handler;
-        this.server = server;
+        this.server = server;*/
+        super(eventType, handler, server);
         props = new Properties();
         props.setProperty("bootstrap.servers", this.server);
         props.setProperty("group.id", groupId);

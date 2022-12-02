@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.smartrm.smartrminfracore.event.DomainEvent;
 import com.smartrm.smartrminfracore.event.DomainEventBus;
 import com.smartrm.smartrminfracore.event.DomainEventHandler;
+
 import java.util.Properties;
 import javax.annotation.PostConstruct;
 
@@ -23,57 +24,57 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class SimpleEventBusImpl implements DomainEventBus {
-
-  @Value("${kafka.server}")
-  private String kafkaServer;
-
-  @Value("${kafka.retries}")
-  private Integer retries;
-
-  @Value("${kafka.batch.size}")
-  private Integer batchSize;
-
-  @Value("${kafka.linger.ms}")
-  private Integer lingerMs;
-
-  @Value("${kafka.buffer.memory}")
-  private Integer bufferMemory;
-
-  private Producer<String, String> producer;
-
-  @PostConstruct
-  private void init() {
-    Properties props = new Properties();
-    props.put("bootstrap.servers", kafkaServer);
-    props.put("acks", "all");
-    props.put("retries", retries);
-    props.put("batch.size", batchSize);
-    props.put("linger.ms", lingerMs);
-    props.put("buffer.memory", bufferMemory);
-    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
-    producer = new KafkaProducer<>(props);
-  }
-
-  private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
-      .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-
-  private static Logger LOGGER = LoggerFactory.getLogger(SimpleEventBusImpl.class);
-
-  @Override
-  public void post(DomainEvent event) {
-    try {
-      String message = objectMapper.writeValueAsString(event);
-      producer.send(new ProducerRecord<String, String>(event.getEventName(), event.key(), message));
-    } catch (Exception e) {
-      LOGGER.error("error when store event", e);
+    
+    @Value("${kafka.server}")
+    private String kafkaServer;
+    
+    @Value("${kafka.retries}")
+    private Integer retries;
+    
+    @Value("${kafka.batch.size}")
+    private Integer batchSize;
+    
+    @Value("${kafka.linger.ms}")
+    private Integer lingerMs;
+    
+    @Value("${kafka.buffer.memory}")
+    private Integer bufferMemory;
+    
+    private Producer<String, String> producer;
+    
+    @PostConstruct
+    private void init() {
+        Properties props = new Properties();
+        props.put("bootstrap.servers", kafkaServer);
+        props.put("acks", "all");
+        props.put("retries", retries);
+        props.put("batch.size", batchSize);
+        props.put("linger.ms", lingerMs);
+        props.put("buffer.memory", bufferMemory);
+        props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+        
+        producer = new KafkaProducer<>(props);
     }
-
-  }
-
-  @Override
-  public void register(DomainEventHandler handler) {
-//    applicationContext.addApplicationListener(handler);
-  }
+    
+    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    
+    private static Logger LOGGER = LoggerFactory.getLogger(SimpleEventBusImpl.class);
+    
+    @Override
+    public void post(DomainEvent event) {
+        try {
+            String message = objectMapper.writeValueAsString(event);
+            producer.send(new ProducerRecord<String, String>(event.getEventName(), event.key(), message));
+        } catch (Exception e) {
+            LOGGER.error("error when store event", e);
+        }
+        
+    }
+    
+    @Override
+    public void register(DomainEventHandler handler) {
+        //    applicationContext.addApplicationListener(handler);
+    }
 }
