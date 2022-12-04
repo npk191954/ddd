@@ -34,13 +34,15 @@ public abstract class AggregateBase {
     this.eventBus = eventBus;
   }
 
-  protected void emitEvent(DomainEvent event) {
-    if (eventBus != null) {
-      eventBus.post(event);
-    } else {
-      throw new DomainException(CommonError.NoEventBus);
-    }
-  }
+  /** 
+   * protected void emitEvent(DomainEvent event) {
+   * if (eventBus != null) {
+   * eventBus.post(event);
+   * } else {
+   * throw new DomainException(CommonError.NoEventBus);
+   * }
+   * }
+   * */
 
 
 }

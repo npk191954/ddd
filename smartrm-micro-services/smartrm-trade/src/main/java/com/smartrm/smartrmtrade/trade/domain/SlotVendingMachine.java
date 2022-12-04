@@ -85,7 +85,8 @@ public class SlotVendingMachine extends AggregateBase {
       throw new DomainException(TradeError.InventoryCheckFail);
     }
     curOrder = this.generateOrder(commodities);
-    emitEvent(new OrderCreatedEvent(this.machineId, curOrder));
+    // emitEvent(new OrderCreatedEvent(this.machineId, curOrder));
+    eventBus.post(new OrderCreatedEvent(this.machineId, curOrder));
     state = SlotVendingMachineState.Trading;
     PaymentQrCode ret = payService.startQrCodePayForOrder(platformType, curOrder);
     curOrder.setPaymentId(ret.getPaymentId());

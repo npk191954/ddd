@@ -3,6 +3,7 @@ package com.smartrm.smartrmtrade.trade.domain;
 import com.smartrm.smartrminfracore.event.DomainEventBus;
 import com.smartrm.smartrminfracore.exception.DomainException;
 import com.smartrm.smartrminfracore.idgenerator.UniqueIdGeneratorUtil;
+import com.smartrm.smartrmtrade.trade.domain.event.OrderCreatedEvent;
 import com.smartrm.smartrmtrade.trade.domain.service.TradePayService;
 import com.smartrm.smartrmtrade.trade.adapter.repository.impl.TradeVendingMachineRepositoryImpl;
 import com.smartrm.smartrmtrade.trade.domain.repository.VendingMachineRepository;
@@ -105,12 +106,16 @@ public class SlotVendingMachinePrivateTest {
                 .when(vendingMachine, "checkInventory", Mockito.<java.util.Collection<StockedCommodity>>any(),
                         Mockito.<TradeDeviceService>any());
         PowerMockito.doReturn(curOrder).when(vendingMachine, "generateOrder", any());
-        PowerMockito.doNothing().when(vendingMachine, "emitEvent", any());
+        /** PowerMockito.doNothing().when(vendingMachine, "emitEvent", any());
+         * eventBus.post(new OrderCreatedEvent(this.machineId, curOrder));
+         */
+        doNothing().when(eventBus).post(any());
         
         PaymentQrCode paymentQrCode = vendingMachine
                 .selectCommodity(Arrays.asList(new StockedCommodity("1", null, null, null, 0)), deviceService,
                         payService, PlatformType.Wechat);
         Assert.assertTrue(paymentQrCode.getCodeUrl().length() > 0);
+        verify(eventBus).post(any());
     }
     
     @Test

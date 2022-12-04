@@ -71,6 +71,7 @@ public class DomainEventListenerAppRunner implements ApplicationRunner {
             //                listener = new RocketmqDomainEventListener(eventType, handler);
             //            }
             
+            ///
             /**
              *  DomainEventListener listener = domainEventListenerImpl;
              *  domainEventListenerImpl.setEventType(eventType);

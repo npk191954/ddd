@@ -1,6 +1,6 @@
 package com.smartrm.smartrminfracore.idgenerator;
 
-import com.smartrm.smartrmtrade.trade.domain.FieldHelper;
+import com.smartrm.smartrminfracore.FieldHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +10,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 /**
  * 对UniqueIdGeneratorUtil类的静态方法测试

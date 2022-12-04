@@ -5,26 +5,29 @@ import com.smartrm.smartrmtrade.trade.application.AppTradeService;
 import com.smartrm.smartrmtrade.trade.domain.share.VendingMachineType;
 import com.smartrm.smartrmtrade.trade.domain.share.event.DeviceFailureEvent;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+@RunWith(SpringRunner.class)
 @SpringBootTest
 class SmartrmTradeApplicationTests {
 
   Logger LOGGER = LoggerFactory.getLogger(SmartrmTradeApplicationTests.class);
 
   @Autowired
-  @Qualifier("simpleEventBusImpl")
+  AppTradeService tradeService;
+
+  @Autowired
+  // @Qualifier("simpleEventBusImpl")
   private DomainEventBus domainEventBus;
 
   @Test
   void contextLoads() {}
-
-  @Autowired
-  AppTradeService tradeService;
 
   @Test
   public void testScheduler() {

@@ -39,7 +39,7 @@ public class RocketmqDomainEventListener extends DomainEventListener {
     public void run() {
         try {
             consumer.subscribe(eventType.getSimpleName(), "*");
-            while (!isClose) {
+            // while (!isClose) {
                 consumer.registerMessageListener(new MessageListenerConcurrently() {
                     @Override
                     public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
@@ -59,7 +59,7 @@ public class RocketmqDomainEventListener extends DomainEventListener {
                     }
                 });
                 consumer.start();
-            }
+            // }
         } catch (MQClientException e) {
             LOGGER.error("fail to handle event.", e);
         }

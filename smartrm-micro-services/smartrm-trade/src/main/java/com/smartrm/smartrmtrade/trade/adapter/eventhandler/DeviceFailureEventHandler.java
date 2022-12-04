@@ -22,9 +22,9 @@ public class DeviceFailureEventHandler extends DomainEventHandler<DeviceFailureE
 
   @Override
   public void onApplicationEvent(DeviceFailureEvent deviceFailureEvent) {
-    LOGGER.info("receive event:{},{},{},{}", deviceFailureEvent.getMachineId(),
+    /*LOGGER.info("receive event:{},{},{},{}", deviceFailureEvent.getMachineId(),
         deviceFailureEvent.getMachineType(), deviceFailureEvent.getOrderId(),
-        deviceFailureEvent.getFailure());
+        deviceFailureEvent.getFailure());*/
     tradeService.onDeviceFailure(deviceFailureEvent);
   }
 
