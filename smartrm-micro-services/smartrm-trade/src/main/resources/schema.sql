@@ -35,6 +35,46 @@ CREATE TABLE `trade_slot_vending_machine`
     `version`      bigint(20),
     `state`        tinyint(1) DEFAULT NULL,
     PRIMARY KEY (`machine_id`),
-    UNIQUE KEY `uk_cur_order_id` (`cur_order_id`)         
+    UNIQUE KEY `uk_cur_order_id` (`cur_order_id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS `msg_send_fail_record`;
+CREATE TABLE `msg_send_fail_record`
+(
+    `id`          bigint(20) NOT NULL AUTO_INCREMENT,
+    `topic`       varchar(100) NOT NULL DEFAULT '',
+    `tags`        varchar(100) NOT NULL DEFAULT '',
+    `keys`        varchar(100) NOT NULL DEFAULT '',
+    `body`        varchar(500) NOT NULL DEFAULT '',
+    `state`       tinyint(1) NOT NULL DEFAULT 0,
+    `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS `msg_consume_fail_record`;
+CREATE TABLE `msg_consume_fail_record`
+(
+    `id`          bigint(20) NOT NULL AUTO_INCREMENT,
+    `topic`       varchar(100) NOT NULL DEFAULT '',
+    `tags`        varchar(100) NOT NULL DEFAULT '',
+    `keys`        varchar(100) NOT NULL DEFAULT '',
+    `body`        varchar(500) NOT NULL DEFAULT '',
+    `state`       tinyint(1) NOT NULL DEFAULT 0,
+    `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `update_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4;
+
+DROP TABLE IF EXISTS `unique_id_generator`;
+CREATE TABLE `unique_id_generator`
+(
+    `id`          bigint(20) NOT NULL AUTO_INCREMENT,
+    `create_time` datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+DEFAULT CHARSET = utf8mb4;
+

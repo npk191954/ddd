@@ -3,6 +3,7 @@ package com.smartrm.smartrminfracore.event.listener;
 import com.smartrm.smartrminfracore.event.DomainEvent;
 import com.smartrm.smartrminfracore.event.DomainEventHandler;
 import com.smartrm.smartrminfracore.event.DomainEventListener;
+import com.smartrm.smartrminfracore.event.FailEventManagable;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
@@ -12,34 +13,33 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public class KafkaDomainEventListener extends DomainEventListener {
-
+    
     private KafkaConsumer<String, String> kafkaConsumer;
-
-//    @Value("${kafka.server}")
+    
+    // @Value("${kafka.server}")
     private static String groupId = "smartrm";
-
+    
     private Properties props;
-
+    
     public KafkaDomainEventListener() {
         super();
     }
-
-    public KafkaDomainEventListener(Class eventType, DomainEventHandler handler, String server) {
+    
+    public KafkaDomainEventListener(Class eventType, DomainEventHandler handler, String server,
+            FailEventManagable failEventManager) {
         /*this.eventType = eventType;
         this.handler = handler;
         this.server = server;*/
-        super(eventType, handler, server);
+        super(eventType, handler, server, failEventManager);
         props = new Properties();
         props.setProperty("bootstrap.servers", this.server);
         props.setProperty("group.id", groupId);
         props.setProperty("enable.auto.commit", "false");
-        props.setProperty("key.deserializer",
-                "org.apache.kafka.common.serialization.StringDeserializer");
-        props.setProperty("value.deserializer",
-                "org.apache.kafka.common.serialization.StringDeserializer");
+        props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         kafkaConsumer = new KafkaConsumer<String, String>(props);
     }
-
+    
     @Override
     public void run() {
         kafkaConsumer.subscribe(Arrays.asList(eventType.getSimpleName()));

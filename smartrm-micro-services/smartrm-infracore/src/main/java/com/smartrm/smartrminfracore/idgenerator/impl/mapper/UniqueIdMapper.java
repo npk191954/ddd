@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Options;
 @Mapper
 public interface UniqueIdMapper {
 
-  @Insert({"insert into unique_id_generator () values ()"})
+  @Insert({"insert into `unique_id_generator` (`create_time`) values (#{createTime})"})
   @Options(useGeneratedKeys = true, keyProperty = "id")
   int nextUniqueId(UniqueIdDo uniqueIdDo);
 }

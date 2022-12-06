@@ -13,12 +13,12 @@ import org.springframework.stereotype.Service;
 public class UniqueIdGeneratorImpl implements UniqueIdGenerator {
 
   @Autowired
-  UniqueIdMapper mapper;
+  UniqueIdMapper uniqueIdMapper;
 
   @Override
   public long next() {
     UniqueIdDo id = new UniqueIdDo();
-    mapper.nextUniqueId(id);
+    uniqueIdMapper.nextUniqueId(id);
     return id.getId();
   }
 }

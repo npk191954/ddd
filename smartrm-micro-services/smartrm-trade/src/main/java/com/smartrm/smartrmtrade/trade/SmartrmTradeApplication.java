@@ -14,7 +14,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 @SpringBootApplication(scanBasePackages = {"com.smartrm.smartrmtrade.trade", "com.smartrm.smartrminfracore",
         "com.smartrm.smartrminfracore.event.impl"}, exclude = {SecurityAutoConfiguration.class})
 @MapperScan({"com.smartrm.smartrmtrade.trade.infrastructure.mapper", "com.smartrm.infracore.idgenerator.impl.mapper",
-        "com.smartrm.smartrminfracore.idgenerator.impl.mapper"})
+        "com.smartrm.smartrminfracore.idgenerator.impl.mapper", "com.smartrm.smartrminfracore.mapper"})
 /** @EnableGlobalMethodSecurity(prePostEnabled = true)
  * @EnableAutoConfiguration(exclude = {SecurityAutoConfiguration.class})
  */ public class SmartrmTradeApplication {

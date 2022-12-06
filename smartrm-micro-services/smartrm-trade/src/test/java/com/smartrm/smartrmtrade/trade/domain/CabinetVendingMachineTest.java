@@ -3,8 +3,7 @@ package com.smartrm.smartrmtrade.trade.domain;
 import com.smartrm.smartrminfracore.event.DomainEventBus;
 import com.smartrm.smartrminfracore.exception.DomainException;
 import com.smartrm.smartrminfracore.idgenerator.UniqueIdGeneratorUtil;
-import com.smartrm.smartrmtrade.trade.adapter.remote.TradeCommodityServiceImpl;
-import com.smartrm.smartrmtrade.trade.adapter.remote.TradeDeviceServiceImpl;
+import com.smartrm.smartrmtrade.trade.FieldHelper;
 import com.smartrm.smartrmtrade.trade.adapter.repository.impl.TradeVendingMachineRepositoryImpl;
 import com.smartrm.smartrmtrade.trade.domain.repository.VendingMachineRepository;
 import com.smartrm.smartrmtrade.trade.domain.service.TradeCommodityService;
@@ -21,14 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.mockito.ArgumentMatchers.any;

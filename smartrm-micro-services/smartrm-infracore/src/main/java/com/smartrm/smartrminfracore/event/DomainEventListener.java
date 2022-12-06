@@ -17,6 +17,8 @@ public abstract class DomainEventListener implements Runnable {
     //  private KafkaConsumer<String, String> kafkaConsumer;
     protected DomainEventHandler handler;
     
+    protected FailEventManagable failEventManager;
+    
     protected String server;
     
     protected Class eventType;
@@ -29,11 +31,13 @@ public abstract class DomainEventListener implements Runnable {
     public DomainEventListener() {
     }
     
-    public DomainEventListener(Class eventType, DomainEventHandler handler, String server) {
+    public DomainEventListener(Class eventType, DomainEventHandler handler, String server,
+            FailEventManagable failEventManager) {
         this.eventType = eventType;
         this.handler = handler;
         this.server = server;
         this.groupId = this.groupId + eventType.getSimpleName();
+        this.failEventManager = failEventManager;
     }
     
     protected ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule())

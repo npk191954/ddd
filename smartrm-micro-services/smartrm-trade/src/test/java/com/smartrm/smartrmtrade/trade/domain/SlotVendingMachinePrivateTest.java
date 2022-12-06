@@ -3,7 +3,7 @@ package com.smartrm.smartrmtrade.trade.domain;
 import com.smartrm.smartrminfracore.event.DomainEventBus;
 import com.smartrm.smartrminfracore.exception.DomainException;
 import com.smartrm.smartrminfracore.idgenerator.UniqueIdGeneratorUtil;
-import com.smartrm.smartrmtrade.trade.domain.event.OrderCreatedEvent;
+import com.smartrm.smartrmtrade.trade.FieldHelper;
 import com.smartrm.smartrmtrade.trade.domain.service.TradePayService;
 import com.smartrm.smartrmtrade.trade.adapter.repository.impl.TradeVendingMachineRepositoryImpl;
 import com.smartrm.smartrmtrade.trade.domain.repository.VendingMachineRepository;

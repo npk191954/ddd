@@ -8,11 +8,16 @@ import org.springframework.context.ApplicationEvent;
  * @author: yoda
  * @description: 领域事件
  */
-//public abstract class DomainEvent extends ApplicationEvent {
 public abstract class DomainEvent extends ApplicationEvent {
 
   private String eventId;
   private LocalDateTime occurTime;
+
+  public DomainEvent(Object source) {
+    super(source);
+    eventId = UUID.randomUUID().toString();
+    occurTime = LocalDateTime.now();
+  }
 
   public String getEventName() {
     return (String) this.source;
@@ -20,12 +25,6 @@ public abstract class DomainEvent extends ApplicationEvent {
 
   public void setEventName(String eventName) {
     this.source = eventName;
-  }
-
-  public DomainEvent(Object source) {
-    super(source);
-    eventId = UUID.randomUUID().toString();
-    occurTime = LocalDateTime.now();
   }
 
   public abstract String key();
@@ -45,4 +44,5 @@ public abstract class DomainEvent extends ApplicationEvent {
   public void setOccurTime(LocalDateTime occurTime) {
     this.occurTime = occurTime;
   }
+
 }

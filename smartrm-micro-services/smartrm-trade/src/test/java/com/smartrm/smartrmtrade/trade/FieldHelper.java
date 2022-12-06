@@ -1,4 +1,4 @@
-package com.smartrm.smartrmtrade.trade.domain;
+package com.smartrm.smartrmtrade.trade;
 
 import org.apache.commons.lang3.reflect.FieldUtils;
 

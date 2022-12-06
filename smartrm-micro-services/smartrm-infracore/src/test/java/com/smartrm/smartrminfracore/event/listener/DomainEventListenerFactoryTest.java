@@ -3,6 +3,7 @@ package com.smartrm.smartrminfracore.event.listener;
 import com.smartrm.smartrminfracore.event.DomainEvent;
 import com.smartrm.smartrminfracore.event.DomainEventHandler;
 import com.smartrm.smartrminfracore.event.DomainEventListener;
+import com.smartrm.smartrminfracore.event.FailEventManagable;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,9 @@ public class DomainEventListenerFactoryTest {
     DomainEvent domainEvent;
     
     @Mock
+    FailEventManagable failEventManager;
+    
+    @Mock
     RocketmqDomainEventListener rocketmqDomainEventListener;
     
     @Mock
@@ -40,16 +44,16 @@ public class DomainEventListenerFactoryTest {
     @Test
     public void testConstructRocketmqDomainEventListener() throws Exception {
         DomainEventListener result = DomainEventListenerFactory
-                .constructDomainEventListener(rocketmqDomainEventListener, domainEventHandler,
-                        domainEvent.getClass(), "localhost:100");
+                .constructDomainEventListener(rocketmqDomainEventListener, domainEventHandler, domainEvent.getClass(),
+                        "localhost:100", failEventManager);
         Assert.assertTrue(result instanceof RocketmqDomainEventListener);
     }
     
     @Test
     public void testConstructKafkaDomainEventListener() throws Exception {
         DomainEventListener result = DomainEventListenerFactory
-                .constructDomainEventListener(kafkaDomainEventListener, domainEventHandler,
-                        domainEvent.getClass(), "localhost:100");
+                .constructDomainEventListener(kafkaDomainEventListener, domainEventHandler, domainEvent.getClass(),
+                        "localhost:100", failEventManager);
         Assert.assertTrue(result instanceof KafkaDomainEventListener);
     }
 }

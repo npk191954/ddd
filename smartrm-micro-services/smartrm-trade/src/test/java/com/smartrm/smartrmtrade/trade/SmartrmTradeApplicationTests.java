@@ -16,31 +16,32 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class SmartrmTradeApplicationTests {
-
-  Logger LOGGER = LoggerFactory.getLogger(SmartrmTradeApplicationTests.class);
-
-  @Autowired
-  AppTradeService tradeService;
-
-  @Autowired
-  // @Qualifier("simpleEventBusImpl")
-  private DomainEventBus domainEventBus;
-
-  @Test
-  void contextLoads() {}
-
-  @Test
-  public void testScheduler() {
-    DeviceFailureEvent event = new DeviceFailureEvent();
-    event.setMachineType(VendingMachineType.SLOT);
-    event.setMachineId(1L);
-    event.setOrderId(25L);
-    tradeService.onDeviceFailure(event);
-    try {
-      Thread.sleep(2000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+    
+    Logger LOGGER = LoggerFactory.getLogger(SmartrmTradeApplicationTests.class);
+    
+    @Autowired
+    AppTradeService tradeService;
+    
+    @Autowired
+    // @Qualifier("simpleEventBusImpl")
+    private DomainEventBus domainEventBus;
+    
+    @Test
+    void contextLoads() {
     }
-  }
-
+    
+    @Test
+    public void testScheduler() {
+        DeviceFailureEvent event = new DeviceFailureEvent();
+        event.setMachineType(VendingMachineType.SLOT);
+        event.setMachineId(1L);
+        event.setOrderId(25L);
+        tradeService.onDeviceFailure(event);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+    
 }

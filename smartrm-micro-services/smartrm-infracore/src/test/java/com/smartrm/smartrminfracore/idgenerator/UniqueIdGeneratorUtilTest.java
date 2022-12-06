@@ -10,11 +10,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * 对UniqueIdGeneratorUtil类的静态方法测试
- * 
+ *
  * @author dailj
  * @date 2022/12/1 17:41
  */
