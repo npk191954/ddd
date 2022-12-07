@@ -1,6 +1,7 @@
 package com.smartrm.smartrminfracore.idgenerator;
 
 import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,22 +11,22 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class UniqueIdGeneratorUtil {
-
-  private static UniqueIdGeneratorUtil instance;
-
-  @Autowired(required = false)
-  private UniqueIdGenerator generator;
-
-  @PostConstruct
-  private void init() {
-    instance = this;
-  }
-
-  public static UniqueIdGeneratorUtil instance() {
-    return instance;
-  }
-
-  public long nextId() {
-    return generator.next();
-  }
+    
+    private static UniqueIdGeneratorUtil instance;
+    
+    @Autowired(required = false)
+    private UniqueIdGenerator generator;
+    
+    @PostConstruct
+    private void init() {
+        instance = this;
+    }
+    
+    public static UniqueIdGeneratorUtil instance() {
+        return instance;
+    }
+    
+    public long nextId() {
+        return generator.next();
+    }
 }
