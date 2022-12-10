@@ -1,5 +1,7 @@
 package com.smartrm.smartrminfracore.idgenerator.impl;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.Date;
 
 /**
@@ -11,7 +13,8 @@ public class UniqueIdDo {
     private Long id;
     
     private Date createTime;
-
+    
+    // @PostConstruct
     public Date getCreateTime() {
         return createTime;
     }
@@ -20,6 +23,7 @@ public class UniqueIdDo {
         this.createTime = createTime;
     }
 
+    // @PreDestroy
     public Long getId() {
         return id;
     }
