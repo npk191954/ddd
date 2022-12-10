@@ -57,7 +57,6 @@ public class DomainEventListenerAppRunner implements ApplicationRunner {
     //
     //  private static String groupId = "smartrm";
     
-    
     @PostConstruct
     private void initDomainEventListener() throws ClassNotFoundException {
         ServiceLoader<DomainEventListener> serviceLoads = ServiceLoader.load(DomainEventListener.class);
