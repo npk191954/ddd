@@ -62,6 +62,8 @@ jwt:
   key: c21hcnRybS1kZGRzbWFydHJtLWRkZHNtYXJ0cm0tZGRk
   expirationSecs: 2592000
 logging:
+  config: classpath:logback/logback.xml
+  # 或通过springboot的配置文件来配置
   level:
     com:
       smartrm:

@@ -17,6 +17,7 @@ import javax.annotation.Resource;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.smartrm.smartrminfracore.event.listener.DomainEventListenerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +31,11 @@ import org.springframework.stereotype.Component;
  * @author: yoda
  * @description:
  */
+@Slf4j
 @Component
 public class DomainEventListenerAppRunner implements ApplicationRunner {
     
-    private static Logger LOGGER = LoggerFactory.getLogger(DomainEventListenerAppRunner.class);
+    // private static Logger LOGGER = LoggerFactory.getLogger(DomainEventListenerAppRunner.class);
     
     @Resource
     private ApplicationContext applicationContext;
@@ -97,7 +99,7 @@ public class DomainEventListenerAppRunner implements ApplicationRunner {
             
             listeners.put(eventType, listener);
             executorService.execute(listener);
-            LOGGER.info("created listener for event:{}", eventType.getSimpleName());
+            log.info("created listener for event:{}", eventType.getSimpleName());
         }
         
     }

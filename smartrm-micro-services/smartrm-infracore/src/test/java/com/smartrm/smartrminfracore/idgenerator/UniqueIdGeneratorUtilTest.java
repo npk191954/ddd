@@ -8,6 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.Mockito.*;
@@ -19,6 +21,7 @@ import static org.mockito.Mockito.*;
  * @date 2022/12/1 17:41
  */
 @RunWith(PowerMockRunner.class)
+@PrepareForTest({UniqueIdGeneratorUtil.class})
 public class UniqueIdGeneratorUtilTest {
     
     @Mock
@@ -37,11 +40,18 @@ public class UniqueIdGeneratorUtilTest {
     
     @Test
     public void testInstance() throws Exception {
-        // 设置静态无权限属性instance
-        FieldHelper.setStaticFinalField(UniqueIdGeneratorUtil.class, "instance", instance);
+        /**
+         * 配合@PrepareForTest注解使用。
+         * 模拟静态方法调用，先模拟对应的UniqueIdGeneratorUtil类，再模拟对应的静态方法。
+         */
+        PowerMockito.mockStatic(UniqueIdGeneratorUtil.class);
+        PowerMockito.doReturn(instance).when(UniqueIdGeneratorUtil.class, "instance");
         
+        /**
+         * 模拟final类，需要配合@PrepareForTest注解使用。
+         */
         UniqueIdGeneratorUtil result = UniqueIdGeneratorUtil.instance();
-        Assert.assertTrue(result instanceof UniqueIdGeneratorUtil);
+        Assert.assertTrue(result == instance);
     }
     
     @Test

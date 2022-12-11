@@ -1,5 +1,7 @@
 package com.smartrm.smartrmtrade.trade.adapter.api.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.smartrm.smartrminfracore.api.CommonResponse;
 import com.smartrm.smartrmtrade.trade.application.AppTradeService;
 import com.smartrm.smartrmtrade.trade.application.dto.CabinetLockedNotificationDto;
@@ -9,12 +11,14 @@ import com.smartrm.smartrmtrade.trade.application.dto.VendingMachineCommodityLis
 import com.smartrm.smartrmtrade.trade.domain.PaymentQrCode;
 import com.smartrm.smartrmtrade.trade.domain.StockedCommodity;
 import com.smartrm.smartrmtrade.trade.domain.VendingMachineCommodityList;
+import com.smartrm.smartrmtrade.trade.domain.share.PlatformType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -24,6 +28,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.StandardEnvironment;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -67,6 +72,8 @@ public class TradeControllerTest {
     @InjectMocks
     TradeController tradeController;
     
+    private Gson gson;
+    
     @Before
     public void init() {
         /**
@@ -76,6 +83,7 @@ public class TradeControllerTest {
          */
         Whitebox.setInternalState(tradeController, "tradeService", tradeService);
         mockMvc = MockMvcBuilders.standaloneSetup(tradeController).build();
+        gson = (new GsonBuilder()).create();
     }
     
     @Test
@@ -96,4 +104,29 @@ public class TradeControllerTest {
         Assert.assertTrue(result.getContentAsString().length() > 0);
         verify(tradeService).queryCommodityList(anyLong());
     }
+    
+    @Test
+    public void testSelectCommodity() throws Exception {
+        doReturn(new PaymentQrCode(1L, "url")).when(tradeService)
+                .selectCommodity(Mockito.any(SelectCommodityCmdDto.class));
+        
+        /**
+         * mockMvc.perform(MockMvcRequestBuilders.get("/trade/slot/listCommodity/1")).andExpect(status().isOk())
+         *       .andExpect(view().name("")).andExpect(model().attributeExists("data"))
+         *       .andExpect(model().attributeExists("code")).andExpect(model().attributeExists("msg"));
+         */
+        SelectCommodityCmdDto selectCommodityCmdDto = new SelectCommodityCmdDto();
+        selectCommodityCmdDto.setMachineId(1L);
+        selectCommodityCmdDto.setCommodityId("1");
+        selectCommodityCmdDto.setPlatformType(null);
+        String requestParams = gson.toJson(selectCommodityCmdDto);
+        
+        MockHttpServletResponse result = mockMvc.perform(
+                MockMvcRequestBuilders.post("/trade/slot/select").contentType(MediaType.APPLICATION_JSON)
+                        .content(requestParams)).andReturn().getResponse();
+        Assert.assertEquals(200, result.getStatus());
+        Assert.assertTrue(result.getContentAsString().length() > 0);
+        verify(tradeService).selectCommodity(Mockito.any(SelectCommodityCmdDto.class));
+    }
+    
 }
